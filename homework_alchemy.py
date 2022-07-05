@@ -61,4 +61,3 @@ def select_db():
 
 data_load()
 select_db()
-
