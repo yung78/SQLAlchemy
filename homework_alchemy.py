@@ -42,7 +42,7 @@ def data_load():
     session.close()
 
 
-def select_db():
+def select_shop():
     db_user = os.environ.get('DB_USER')
     db_pass = os.environ.get('DB_PASS')
     db_name = os.environ.get('DB_NAME')
@@ -53,11 +53,20 @@ def select_db():
     name_or_id = input('Введите имя или id издателя: ')
     if name_or_id.isdigit():
         for inf in session.query(Publisher).filter(Publisher.id == name_or_id).all():
-            return print(inf)
+            print(f'Информация по издателю - {inf}')
+            print()
+        for shop_inf in session.query(Shop).join(Stock).join(Book).join(Publisher).\
+                filter(Publisher.id == name_or_id).all():
+            print(f'Информация по магазину - {shop_inf}')
+        return session.close()
     for inf in session.query(Publisher).filter(Publisher.name == name_or_id).all():
-        return print(inf)
-    session.close()
+        print(f'Информация по издателю - {inf}')
+        print()
+    for shop_inf in session.query(Shop).join(Stock).join(Book).join(Publisher).\
+            filter(Publisher.name == name_or_id).all():
+        print(f'Информация по магазину - {shop_inf}')
+    return session.close()
 
 
 data_load()
-select_db()
+select_shop()
